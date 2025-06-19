@@ -3,15 +3,14 @@ import mongoose from "mongoose";
 import { getWakaTimeSummaries , getAllUsers, deleteUser, updateUser} from "./function.js";
 import User from "./user.model.js";
 import cors from 'cors';
-
+import path from 'path'
+import { fileURLToPath } from "url";
 
 
 const MONGO_URI =
   process.env.MONGO_URL
 
-
-console.log(MONGO_URI)
-mongoose
+await mongoose
   .connect(MONGO_URI)
   .then(() => console.log("Successfully connected to MongoDB."))
   .catch((err) => console.error("Could not connect to MongoDB.", err));
@@ -24,13 +23,27 @@ app.use(cors());
 // Define the correct password
 
 const CORRECT_PASSWORD = process.env.CORRECT_PASSWORD
-console.log(CORRECT_PASSWORD)
+
 
 const logger = (req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} - ${req.url}`);
   next();
 };
+
 app.use(logger);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log(__filename)
+console.log(__dirname,"a.html")
+console.log(path.join(__dirname, "a.html"))
+
+
+app.get("/",(req,res)=>{
+  res.status(200).sendFile(path.join(__dirname, "a.html"));
+})
+
+
 
 // --- NEW PASSWORD VERIFICATION ROUTE ---
 app.post("/verify-password", (req, res) => {
@@ -49,9 +62,9 @@ app.post("/verify-password", (req, res) => {
   }
 });
 
-app.get("/",(req,res)=>{
-  res.status(200).json({this: isgood})
-})
+
+
+
 
 app.post("/addUser", async (req, res) => {
   try {
