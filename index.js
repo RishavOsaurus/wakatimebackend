@@ -49,6 +49,10 @@ app.post("/verify-password", (req, res) => {
   }
 });
 
+app.get("/",(req,res)=>{
+  res.status(200).json({this: isgood})
+})
+
 app.post("/addUser", async (req, res) => {
   try {
     const { name, api_key } = req.body;
