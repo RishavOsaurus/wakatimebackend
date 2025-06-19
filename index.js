@@ -18,7 +18,13 @@ await mongoose
 const app = express();
 
 app.use(express.json()); // Middleware to parse JSON bodies
-app.use(cors());
+
+const corsOptions = {
+  origin: 'https://crishav.com.np',
+  optionsSuccessStatus: 200 // For legacy browser support
+};
+
+app.use(cors(corsOptions));
 
 // Define the correct password
 
