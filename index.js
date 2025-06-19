@@ -19,6 +19,28 @@ const app = express();
 
 app.use(express.json()); // Middleware to parse JSON bodies
 
+const originStrictCheck = (req, res, next) => {
+  const origin = req.get("origin");
+  const referer = req.get("referer");
+
+  const allowed = "https://crishav.com.np";
+
+  // If no origin or referer (Postman, curl), reject
+  if (!origin && !referer) {
+    return res.status(403).json({ error: "Forbidden - No origin or referer." });
+  }
+
+  // If origin or referer doesn't match your frontend, reject
+  if ((origin && origin !== allowed) || (referer && !referer.startsWith(allowed))) {
+    return res.status(403).json({ error: "Forbidden - Invalid origin or referer." });
+  }
+
+  next();
+};
+
+app.use(originStrictCheck);
+
+
 const corsOptions = {
   origin: 'https://crishav.com.np',
   optionsSuccessStatus: 200 // For legacy browser support
